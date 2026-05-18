@@ -49,9 +49,9 @@ The repo ships **four icon options** in `icon-options/`:
 
 | Option       | Look                                                  | Best at 16 px |
 | ------------ | ----------------------------------------------------- | ------------- |
-| `bubble`     | Teams-purple chat bubble with `md` inside             | Shape OK, text mushy |
-| `doc`        | Document with purple header and four caption lines    | Good          |
-| `monogram`   | Bold white `MD` on a rounded purple tile (**default**) | Excellent    |
+| `bubble`     | Teams-purple chat bubble with `md` inside (**default**) | Shape OK, text mushy |
+| `doc`        | Document with purple header and four caption lines     | Good          |
+| `monogram`   | Bold white `MD` on a rounded purple tile               | Excellent     |
 | `caption`    | Three speaker rows (avatar dot + caption bar)          | Good          |
 
 `icon-options/preview.png` is a single composite that shows all four side
@@ -73,6 +73,35 @@ or letterforms) install Python with `cairosvg` and Pillow, then run:
 ```bash
 python3 icon-options/build_icons.py
 ```
+
+## Package & share
+
+```bash
+./package.sh
+```
+
+Produces `dist/teams-transcript-md-v<version>.zip` (~18 KB) containing
+exactly the files needed at runtime plus a peer-facing `INSTALL.md`:
+
+```
+manifest.json
+popup.html  popup.css  popup.js
+icons/icon-{16,32,48,128}.png
+INSTALL.md
+```
+
+The build is reproducible (sorted file order, `-X` strips timestamps), so
+the same source tree produces the same SHA256 every time — handy when a
+peer asks "did I get the latest one?".
+
+Send the zip via email / SharePoint / Drop / wherever. Peers install by:
+
+1. Unzip somewhere stable (folder must stay put).
+2. `edge://extensions/` → enable Developer mode → **Load unpacked** →
+   pick the unzipped folder.
+
+That's it. `INSTALL.md` inside the zip has the full peer-facing steps,
+including Chrome/Brave instructions, troubleshooting, and uninstall.
 
 ## Use it
 
