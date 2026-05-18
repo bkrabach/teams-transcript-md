@@ -21,6 +21,8 @@ ZIP="dist/${NAME}-v${VERSION}.zip"
 # Files that must exist for a valid build.
 REQUIRED=(
   manifest.json
+  background.js
+  capture.js
   popup.html
   popup.css
   popup.js
@@ -45,16 +47,18 @@ fi
 python3 -c "import json; json.load(open('manifest.json'))" \
   || { echo "manifest.json is not valid JSON" >&2; exit 1; }
 
-# Validate popup.js parses (best-effort: needs node).
+# Validate scripts parse (best-effort: needs node).
 if command -v node >/dev/null 2>&1; then
   node --check popup.js >/dev/null
+  node --check background.js >/dev/null
+  node --check capture.js >/dev/null
 fi
 
 # Clean stage + build.
 rm -rf "$STAGE" "$ZIP"
 mkdir -p "$STAGE/icons"
 
-cp manifest.json popup.html popup.css popup.js INSTALL.md "$STAGE/"
+cp manifest.json background.js capture.js popup.html popup.css popup.js INSTALL.md "$STAGE/"
 cp icons/icon-16.png icons/icon-32.png icons/icon-48.png icons/icon-128.png "$STAGE/icons/"
 
 # Build the zip with a stable, sorted file order so the artifact is

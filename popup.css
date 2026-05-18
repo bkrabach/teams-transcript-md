@@ -36,8 +36,44 @@ body {
 }
 
 body {
-  width: 340px;
+  width: 360px;
   padding: 14px 14px 12px;
+}
+
+.target {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0 0 8px;
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.target .target-label {
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  flex: 0 0 auto;
+}
+
+.target .target-url {
+  flex: 1 1 auto;
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saved-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 6px 0 0;
+  min-height: 1.2em;
+  opacity: 1;
+  transition: opacity 1.2s ease 0.4s;
+}
+
+.saved-hint.fade {
+  opacity: 0;
 }
 
 header h1 {

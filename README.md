@@ -1,100 +1,108 @@
-# Teams Transcript → Markdown (Edge extension)
+# Teams Transcript → Markdown (Edge / Chrome extension)
 
 A small Microsoft Edge extension (Manifest V3, Chromium-compatible) that
 captures the transcript from a Microsoft Teams meeting or recording and
 downloads it as an LLM-friendly Markdown file — same shape as the
-[`transcripts`](../transcripts) CLI's `vtt2md` output.
+[`transcripts`](../transcripts) CLI's `vtt2md` output. Also speaks raw
+WebVTT for fast-path captures on SharePoint Stream pages.
 
 ## What it does
 
-Two capture paths, picked automatically per page:
+**Two interaction surfaces:**
+
+1. **Left-click the toolbar icon** — quick capture with the last-saved
+   settings. A toolbar badge flashes `…` (working) → `✓` (success) or
+   `!` (failure). On failure, a desktop notification carries the error.
+2. **Right-click the toolbar icon** — context menu:
+   - Capture as Markdown (.md)
+   - Capture as raw WebVTT (.vtt)
+   - Open settings popup… (interactive UI in a small window)
+
+The settings popup writes every edit straight to `chrome.storage.local`,
+so the next left-click uses your latest choices. It also has its own
+**Capture & Download** button, and stays open after capture so you can
+adjust settings and re-run.
+
+**Two capture paths, picked automatically per page:**
 
 1. **API fast path (`~1–3 s`)** — on SharePoint- or OneDrive-hosted
-   recording pages (`*.sharepoint.com/.../stream.aspx*`), the script
+   recording pages (`*.sharepoint.com/.../stream.aspx*`) the script
    harvests the SharePoint drive/item IDs from the page's bootstrap
    `<script>` tags, calls
    `/_api/v2.1/drives/{driveId}/items/{itemId}?...=media/transcripts`,
    rewrites the returned `temporaryDownloadUrl` to the
    `streamContent?is=1&applymediaedits=false` form, and downloads the
    raw `.vtt` file Microsoft already has on the server.
-
 2. **DOM scrape (`~20–40 s`)** — fallback for anywhere the fast path
    doesn't apply: `teams.microsoft.com` live meetings, legacy
    `web.microsoftstream.com`, the new `*.cloud.microsoft` surfaces,
-   etc. Locates the transcript scroll pane via content heuristics
-   (scrollable overflow + density of timestamps and `Speaker`/`said`/
-   `AM`/`PM` hits), auto-scrolls top-to-bottom, and extracts entries
-   from the rendered DOM. The capture script is injected into every
-   frame on the page, so transcripts that live inside a cross-origin
-   player iframe work too.
+   etc. The capture script is injected into every frame on the page,
+   so transcripts in a cross-origin player iframe work too.
 
-The popup picks between **Markdown** (LLM-friendly, default) and
-**Raw WebVTT** (fast-path only — the DOM can't produce a faithful
-`.vtt` because rendered times are second-precision). Both paths
-funnel through the same Markdown renderer when `.md` is selected, so
-the output shape is identical regardless of which path captured the
-data; it's also byte-identical to the
-[`transcripts vtt2md`](../transcripts) CLI's output on the same `.vtt`.
-2. Auto-scrolls top → bottom, harvesting every entry that Teams' virtualised
-   list renders along the way.
-3. Parses each entry into `(speaker, timestamp, text)`.
-4. Sorts by timestamp, dedupes overlaps, optionally merges consecutive
-   same-speaker turns into single paragraphs.
-5. Renders a token-friendly Markdown transcript:
+Both paths funnel through the same Markdown renderer when `.md` is
+selected. Output is **byte-identical** to the `transcripts vtt2md` CLI's
+output on the same `.vtt` (verified on a 2.5 h, 2,529-cue recording).
 
-   ```markdown
-   # Transcript: <meeting name from page title>
+Raw WebVTT output is fast-path only — the DOM scrape can't reconstruct
+millisecond-precise VTT timestamps, so the popup won't let you pick
+`.vtt` if the page can't reach the API.
 
-   Source: <full meeting/recording URL>
-   Duration: H:MM:SS
-   Speakers: Alice, Bob, ...
+## File layout
 
-   ---
+```
+manifest.json       MV3, references background + popup, four icon sizes
+background.js       Service worker — action.onClicked + contextMenus
+capture.js          Shared module: DEFAULT_OPTIONS, loadOptions(),
+                    saveOptions(), runCapture(), captureAndDownload()
+                    (the big page-injected function)
+popup.html          Interactive UI (opens via right-click menu)
+popup.css           Light + dark themed styles
+popup.js            Popup script — reads/writes storage, calls runCapture()
+icons/icon-*.png    Toolbar icons at 16/32/48/128
+INSTALL.md          Peer-facing install guide (bundled into the zip)
+package.sh          Reproducible build script (produces dist/*.zip)
+```
 
-   [MM:SS] Alice: ...
+## Install (developer workflow)
 
-   [MM:SS] Bob: ...
-   ```
-
-6. Triggers a download as `<sanitised meeting name>.md`.
-
-## Install in Microsoft Edge
-
-1. Clone this repo (or download a zip and unzip somewhere).
-2. Open Edge to `edge://extensions/`.
+1. Clone or download this folder.
+2. Open Edge to `edge://extensions/` (or `chrome://extensions/`).
 3. Toggle **Developer mode** (bottom-left).
-4. Click **Load unpacked** and select the `teams-transcript-md/` directory.
-5. (Optional) Pin the extension from the puzzle-piece menu in the toolbar.
+4. Click **Load unpacked** and select the folder.
+5. Pin the extension from the puzzle-piece menu so its button is visible.
 
-It also works in Google Chrome / Brave / any recent Chromium — same steps,
-just at `chrome://extensions/`.
+For peers, ship them `dist/teams-transcript-md-v<version>.zip` (see
+**Package & share** below). It unpacks to the same layout and they load
+it unpacked the same way.
 
-### Icons
+## Permissions
 
-The repo ships **four icon options** in `icon-options/`:
+| Permission       | Why |
+| ---------------- | --- |
+| `activeTab`      | Temporary access to the current tab when the user clicks the toolbar icon or picks a context-menu action. |
+| `scripting`      | Inject the capture script on demand via `chrome.scripting.executeScript`. |
+| `storage`        | Remember the user's last-saved format / option preferences. |
+| `contextMenus`   | Right-click menu on the toolbar icon (quick captures + settings). |
+| `notifications`  | Show a system notification when a quick capture fails (badges alone are easy to miss). |
 
-| Option       | Look                                                  | Best at 16 px |
-| ------------ | ----------------------------------------------------- | ------------- |
-| `bubble`     | Teams-purple chat bubble with `md` inside (**default**) | Shape OK, text mushy |
-| `doc`        | Document with purple header and four caption lines     | Good          |
-| `monogram`   | Bold white `MD` on a rounded purple tile               | Excellent     |
-| `caption`    | Three speaker rows (avatar dot + caption bar)          | Good          |
+No host permissions. No background fetch. No remote endpoints. Capture
+happens in the page; the resulting file is a normal browser download.
 
-`icon-options/preview.png` is a single composite that shows all four side
-by side at 128 px (on light and dark backgrounds) and at toolbar sizes
-(16/32/48). Open it to compare.
+## Icons
 
-Swap the active set any time:
+Four icon options live in `icon-options/`; `bubble` is wired as the
+active set in `icons/`. `icon-options/preview.png` is a single composite
+showing all four at 128 px (light + dark bg) and at toolbar sizes
+(16/32/48). To swap:
 
 ```bash
 icon-options/pick.sh             # interactive list
 icon-options/pick.sh bubble      # or pick by name
 ```
 
-Then reload the extension from `edge://extensions/`.
-
-To regenerate everything from the source SVGs (e.g. after tweaking colors
-or letterforms) install Python with `cairosvg` and Pillow, then run:
+Regenerate any option from its `source.svg` (e.g. after tweaking colors
+or letterforms) by installing Python with `cairosvg` and Pillow and
+running:
 
 ```bash
 python3 icon-options/build_icons.py
@@ -106,88 +114,31 @@ python3 icon-options/build_icons.py
 ./package.sh
 ```
 
-Produces `dist/teams-transcript-md-v<version>.zip` (~18 KB) containing
+Produces `dist/teams-transcript-md-v<version>.zip` (~24 KB) containing
 exactly the files needed at runtime plus a peer-facing `INSTALL.md`:
 
 ```
 manifest.json
-popup.html  popup.css  popup.js
+background.js  capture.js
+popup.html     popup.css      popup.js
 icons/icon-{16,32,48,128}.png
 INSTALL.md
 ```
 
-The build is reproducible (sorted file order, `-X` strips timestamps), so
-the same source tree produces the same SHA256 every time — handy when a
-peer asks "did I get the latest one?".
+The build is reproducible (sorted file order, `-X` strips zip
+timestamps), so the same source tree produces the same SHA256 every
+time. Useful when a peer asks "is this the latest?".
 
-Send the zip via email / SharePoint / Drop / wherever. Peers install by:
+Peers install by unzipping somewhere stable and loading unpacked.
 
-1. Unzip somewhere stable (folder must stay put).
-2. `edge://extensions/` → enable Developer mode → **Load unpacked** →
-   pick the unzipped folder.
+## Roadmap
 
-That's it. `INSTALL.md` inside the zip has the full peer-facing steps,
-including Chrome/Brave instructions, troubleshooting, and uninstall.
+Wishlist for future versions:
 
-## Use it
-
-1. Open the meeting/recording in Teams and reveal the **Transcript** pane
-   (the side panel with the time-stamped lines).
-2. Click the extension icon in the toolbar.
-3. Click **Capture & Download .md**.
-
-A long meeting takes ~30 s because the extension has to scroll the entire
-virtualised list to materialise every entry. The popup shows progress; you
-can leave it open or close it (the download still completes either way).
-
-You can also grab the rendered Markdown from the page's DevTools console
-after a capture:
-
-```js
-copy(window.__teamsTranscriptMd);
-```
-
-## Options (in the popup)
-
-- **Include timestamps** — add `[MM:SS]` (or `[H:MM:SS]` for ≥1 h
-  meetings) to each block. Off = maximum token savings.
-- **Merge consecutive same-speaker entries** — turn a back-to-back run
-  of short cues from one speaker into a single paragraph (recommended).
-- **Label for unnamed speakers** — what to call entries Teams renders
-  without a speaker name. Defaults to `Unknown`.
-
-## Permissions
-
-- `activeTab` — temporary access to the current tab when you click the
-  extension's action button. No background access to any site.
-- `scripting` — required by Manifest V3 to inject the capture script on
-  demand.
-
-The extension declares **no host permissions** and runs **no background
-service worker**. Nothing happens until you click the button.
-
-## Caveats
-
-- Teams' DOM is not a public contract. The extension uses content
-  heuristics (scrollable pane + timestamp-like leaf nodes) rather than
-  specific class names, which should survive most Teams UI revisions, but
-  there is no guarantee.
-- If the meeting title can't be found from the page (some recording
-  surfaces use generic titles), the file is saved as
-  `Teams Transcript.md`. You can also edit the filename in the
-  Edge "Save as" dialog when downloads are configured to prompt.
-- The extension never sends data anywhere — all parsing happens in-page,
-  and the resulting `.md` is delivered via a normal browser download.
-
-## Relationship to the `transcripts` CLI
-
-This extension produces the same Markdown shape as
-`transcripts vtt2md`. Pick whichever fits the situation:
-
-| Source              | Use                              |
-| ------------------- | -------------------------------- |
-| Have the `.vtt`     | `transcripts vtt2md foo.vtt`     |
-| Only the live page  | This Edge extension              |
+- **Keyboard shortcut** (e.g. `Ctrl+Shift+T`) for quick capture without
+  reaching for the mouse. Wired up via `commands` in the manifest.
+- **Store-friendly version** — see "Publishing to a store" notes in the
+  most recent conversation summary.
 
 ## License
 

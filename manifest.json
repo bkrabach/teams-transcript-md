@@ -1,12 +1,21 @@
 {
   "manifest_version": 3,
   "name": "Teams Transcript to Markdown",
-  "version": "0.2.1",
-  "description": "Capture the transcript from a Microsoft Teams meeting or recording and download it as an LLM-friendly Markdown file.",
-  "permissions": ["activeTab", "scripting"],
+  "version": "0.3.0",
+  "description": "Capture the transcript from a Microsoft Teams meeting or recording and download it as an LLM-friendly Markdown file (or raw WebVTT). One-click quick capture or interactive settings popup.",
+  "permissions": ["activeTab", "scripting", "storage", "contextMenus", "notifications"],
   "action": {
-    "default_title": "Capture Teams transcript as Markdown",
-    "default_popup": "popup.html"
+    "default_title": "Capture Teams transcript (click for quick capture · right-click for options)",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
   },
   "icons": {
     "16": "icons/icon-16.png",
