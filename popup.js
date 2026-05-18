@@ -69,6 +69,11 @@ btn.addEventListener("click", async () => {
           ? `via API · ${secs}s · ${kb} KB`
           : `via DOM · ${secs}s · ${best.entries} entries · ${best.speakers} speakers · ${kb} KB`;
       setStatus(`✓ Downloaded "${best.filename}" — ${detail}`, "good");
+      // Close the popup so the browser's download notification isn't covered
+      // up by our window. Small delay so the success message is visible if
+      // anyone glances at it.
+      setTimeout(() => window.close(), 150);
+      return;
     } else if (failures.length > 0) {
       const errs = failures.map((f) => f.error).filter(Boolean);
       const err =

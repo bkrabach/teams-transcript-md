@@ -87,6 +87,34 @@ button.primary:hover:not(:disabled) {
   color: var(--bad);
 }
 
+fieldset.format {
+  margin: 10px 0 4px;
+  padding: 6px 10px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+fieldset.format legend {
+  padding: 0 4px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+fieldset.format label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+fieldset.format label .muted {
+  font-size: 11px;
+}
+
 details {
   margin-top: 6px;
   font-size: 12px;
