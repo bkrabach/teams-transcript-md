@@ -1,14 +1,13 @@
 // =============================================================================
-// popup.js — interactive settings UI.
+// popup.js — interactive UI shown when the toolbar icon is clicked.
 //
-// Reached two ways:
-//   - Right-click the extension icon -> "Open settings popup…" (background
-//     opens us in a small dedicated window with ?tabId=<n> in the URL).
-//   - Loading popup.html directly via chrome.runtime.getURL (debug).
+// On open: load saved options from chrome.storage.local and populate the
+// controls. Edits are persisted automatically (debounced) so a future popup
+// open starts in the same state.
 //
-// Saves edits to chrome.storage.local on every change so the next toolbar
-// click uses them. The Capture button fires the same runCapture orchestrator
-// that the background's one-click action uses; popup stays open afterwards.
+// On Capture click: save the current options + run the shared capture
+// orchestrator in capture.js, then auto-close on success so the browser's
+// download notification isn't covered by our window.
 // =============================================================================
 
 import { loadOptions, saveOptions, runCapture } from "./capture.js";
@@ -16,6 +15,7 @@ import { loadOptions, saveOptions, runCapture } from "./capture.js";
 const $ = (id) => document.getElementById(id);
 const statusEl = $("status");
 const btn = $("capture");
+const savedHintEl = $("saved-hint");
 
 function setStatus(text, kind = "") {
   statusEl.textContent = text;
@@ -23,31 +23,7 @@ function setStatus(text, kind = "") {
 }
 
 // -----------------------------------------------------------------------------
-// Resolve target tab. Background passes ?tabId=<n> when it opens us via
-// chrome.windows.create; if absent (debug load, manual open), fall back to
-// the last-focused regular browser window's active tab.
-// -----------------------------------------------------------------------------
-
-async function resolveTargetTab() {
-  const params = new URLSearchParams(location.search);
-  const fromQuery = parseInt(params.get("tabId") || "", 10);
-  if (Number.isFinite(fromQuery) && fromQuery > 0) {
-    try {
-      const t = await chrome.tabs.get(fromQuery);
-      if (t) return t;
-    } catch (_) {
-      // tab may have closed; fall through.
-    }
-  }
-  const tabs = await chrome.tabs.query({
-    active: true,
-    lastFocusedWindow: true,
-  });
-  return tabs[0] || null;
-}
-
-// -----------------------------------------------------------------------------
-// Wire UI <-> storage.
+// UI <-> options
 // -----------------------------------------------------------------------------
 
 function readUI() {
@@ -56,8 +32,7 @@ function readUI() {
     format: fmtEl && fmtEl.value === "vtt" ? "vtt" : "md",
     includeTimestamps: $("opt-timestamps").checked,
     merge: $("opt-merge").checked,
-    unknownLabel:
-      ($("opt-unknown").value || "Unknown").trim() || "Unknown",
+    unknownLabel: ($("opt-unknown").value || "Unknown").trim() || "Unknown",
   };
 }
 
@@ -78,17 +53,14 @@ function persistSoon() {
     if (savedHintEl) {
       savedHintEl.textContent = "Settings saved.";
       savedHintEl.classList.remove("fade");
-      // Re-trigger CSS animation to fade out.
-      void savedHintEl.offsetWidth;
+      void savedHintEl.offsetWidth; // re-trigger CSS transition
       savedHintEl.classList.add("fade");
     }
   }, 120);
 }
 
-const savedHintEl = $("saved-hint");
-
 // -----------------------------------------------------------------------------
-// Init.
+// Init
 // -----------------------------------------------------------------------------
 
 (async () => {
@@ -102,21 +74,26 @@ const savedHintEl = $("saved-hint");
   }
   $("opt-unknown").addEventListener("input", persistSoon);
 
-  const targetTab = await resolveTargetTab();
-  if (!targetTab || !targetTab.id) {
-    setStatus(
-      "Couldn't find a tab to capture from. Open this from the extension's right-click menu while on a Teams page.",
-      "bad",
-    );
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+  if (!tab || !tab.id) {
+    setStatus("No active tab.", "bad");
     btn.disabled = true;
     return;
   }
 
   const targetEl = $("target-url");
   if (targetEl) {
-    const u = targetTab.url || "";
-    targetEl.textContent = u ? new URL(u).host + (new URL(u).pathname || "") : "(unknown tab)";
-    targetEl.title = u;
+    const url = tab.url || "";
+    try {
+      const u = new URL(url);
+      targetEl.textContent = u.host + (u.pathname || "");
+    } catch (_) {
+      targetEl.textContent = url || "(unknown tab)";
+    }
+    targetEl.title = url;
   }
 
   btn.addEventListener("click", async () => {
@@ -126,7 +103,7 @@ const savedHintEl = $("saved-hint");
     setStatus(`Capturing transcript… (.${options.format})`);
     const t0 = performance.now();
     try {
-      const result = await runCapture(targetTab.id, targetTab.url || "", options);
+      const result = await runCapture(tab.id, tab.url || "", options);
       const secs = ((performance.now() - t0) / 1000).toFixed(1);
       if (result.ok) {
         const kb = (result.bytes / 1024).toFixed(1);
@@ -135,6 +112,8 @@ const savedHintEl = $("saved-hint");
             ? `via API · ${secs}s · ${kb} KB`
             : `via DOM · ${secs}s · ${result.entries} entries · ${result.speakers} speakers · ${kb} KB`;
         setStatus(`✓ Downloaded "${result.filename}" — ${detail}`, "good");
+        // Close so the browser's download notification isn't covered up.
+        setTimeout(() => window.close(), 150);
       } else {
         setStatus(`Failed: ${result.error || "unknown error"}`, "bad");
       }
