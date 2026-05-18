@@ -23,6 +23,24 @@
       <button id="capture" class="primary">Capture &amp; Download</button>
       <div id="status" role="status" aria-live="polite"></div>
 
+      <section
+        id="result"
+        class="result hidden"
+        role="region"
+        aria-label="Last download"
+      >
+        <div class="result-info">
+          <span class="result-filename" id="result-filename"></span>
+          <span class="result-meta" id="result-meta"></span>
+        </div>
+        <div class="result-actions">
+          <button id="open-file" class="secondary" type="button">Open</button>
+          <button id="show-folder" class="secondary" type="button">
+            Show in folder
+          </button>
+        </div>
+      </section>
+
       <fieldset class="format">
         <legend>Save as</legend>
         <label>

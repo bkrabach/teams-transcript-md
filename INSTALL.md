@@ -34,9 +34,19 @@ Same steps, just at `chrome://extensions/` (or `brave://extensions/`).
 4. Pick **Save as: Markdown** (default) or **Raw WebVTT**, then click
    **Capture & Download**.
 
-The popup closes automatically on a successful download so it doesn't
-cover up your browser's download notification. On a failure it stays
-open with the error message visible.
+After a successful download the popup shows a **result panel** with the
+filename and two buttons:
+
+- **Open** — opens the file in its default app (e.g. your Markdown
+  editor or a `.vtt` player).
+- **Show in folder** — opens your OS file manager focused on the file.
+
+The popup stays open so you can take those actions or kick off another
+capture without re-clicking the toolbar icon. On a failure the popup
+stays open with the error message visible.
+
+Hover the filename in the result panel to see the full download path
+as a tooltip.
 
 Your last-used options (format, timestamps, merge, unknown-speaker
 label) are remembered across popup opens.
@@ -63,11 +73,13 @@ faithful `.vtt`, so leave the default Markdown setting on there.
 
 ## Permissions
 
-| Permission   | Why it's there                                                          |
-| ------------ | ----------------------------------------------------------------------- |
-| `activeTab`  | Temporary access to the current tab when you click the toolbar icon. No background access to any site. |
-| `scripting`  | Required by Manifest V3 to inject the capture logic on demand.          |
-| `storage`    | Remembers your format / option preferences between popup opens.         |
+| Permission        | Why it's there                                                          |
+| ----------------- | ----------------------------------------------------------------------- |
+| `activeTab`       | Temporary access to the current tab when you click the toolbar icon. No background access to any site. |
+| `scripting`       | Required by Manifest V3 to inject the capture logic on demand.          |
+| `storage`         | Remembers your format / option preferences between popup opens.         |
+| `downloads`       | Save the captured file via the browser's download manager, and let the popup reveal it in the OS file manager. |
+| `downloads.open`  | Lets the popup's **Open** button launch the saved file in its default app. |
 
 The extension declares **no host permissions**, runs **no background
 service worker**, and never sends data anywhere. Everything happens

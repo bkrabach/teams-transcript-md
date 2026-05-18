@@ -76,6 +76,69 @@ body {
   opacity: 0;
 }
 
+/* Result panel */
+
+.result {
+  margin: 8px 0 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(127, 127, 127, 0.06);
+}
+
+.result.hidden {
+  display: none;
+}
+
+.result-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+  min-width: 0;
+}
+
+.result-filename {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--good);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: help;
+}
+
+.result-meta {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.result-actions {
+  display: flex;
+  gap: 6px;
+}
+
+button.secondary {
+  flex: 1 1 auto;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+button.secondary:active {
+  transform: translateY(1px);
+}
+
 header h1 {
   font-size: 14px;
   margin: 0 0 4px;

@@ -9,9 +9,13 @@ WebVTT for fast-path captures on SharePoint Stream pages.
 ## What it does
 
 Click the toolbar icon on a Teams page → the popup opens → click
-**Capture & Download**. On success the popup closes so it doesn't cover
-your browser's download notification; on failure it stays open with the
-error message visible.
+**Capture & Download**. On success a result panel appears in the popup
+with the filename and two buttons — **Open** (launches the file in its
+default app) and **Show in folder** (reveals it in the OS file
+manager). On failure the popup stays open with the error message.
+
+Your last-used options persist across popup opens via
+`chrome.storage.local`.
 
 **Two capture paths, picked automatically per page:**
 
@@ -67,15 +71,18 @@ it unpacked the same way.
 
 ## Permissions
 
-| Permission   | Why |
-| ------------ | --- |
-| `activeTab`  | Temporary access to the current tab when the user clicks the toolbar icon. |
-| `scripting`  | Inject the capture script on demand via `chrome.scripting.executeScript`. |
-| `storage`    | Remember the user's last-saved format / option preferences. |
+| Permission        | Why |
+| ----------------- | --- |
+| `activeTab`       | Temporary access to the current tab when the user clicks the toolbar icon. |
+| `scripting`       | Inject the capture script on demand via `chrome.scripting.executeScript`. |
+| `storage`         | Remember the user's last-saved format / option preferences. |
+| `downloads`       | Save the captured file via `chrome.downloads.download` (so the popup can show / reveal it). |
+| `downloads.open`  | Power the **Open** button in the result panel (`chrome.downloads.open`). |
 
 No host permissions. No background service worker. No remote calls.
-Capture happens in the page; the resulting file is a normal browser
-download.
+Capture happens in the page; the popup hands the resulting blob to
+`chrome.downloads.download` and exposes the saved file through the
+result-panel buttons.
 
 ## Icons
 

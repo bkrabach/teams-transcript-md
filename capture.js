@@ -143,19 +143,6 @@ export async function captureAndDownload(opts) {
     return t;
   }
 
-  function triggerDownload(content, filename, mime) {
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.style.display = "none";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-  }
-
   // ----- VTT parser (port of transcripts/src/transcripts/vtt.py) -------------
   const VTT_TIMESTAMP_RE =
     /^\s*(?:(\d{1,2}):)?(\d{2}):(\d{2})\.(\d{3})\s*-->\s*(?:(\d{1,2}):)?(\d{2}):(\d{2})\.(\d{3})/;
@@ -453,12 +440,16 @@ export async function captureAndDownload(opts) {
     const title = (pt && pt.length >= 3 ? pt : baseName) || "Teams Transcript";
 
     if (opts.format === "vtt") {
-      triggerDownload(vttText, vttFilename, "text/vtt;charset=utf-8");
       const cueCount = parseVtt(vttText).length;
+      try {
+        window.__teamsTranscriptVtt = vttText;
+      } catch (_) {}
       return {
         ok: true,
         mode: "api",
         filename: vttFilename,
+        content: vttText,
+        mime: "text/vtt;charset=utf-8",
         bytes: vttText.length,
         entries: cueCount,
         speakers: 0,
@@ -469,7 +460,6 @@ export async function captureAndDownload(opts) {
     if (merge) cues = mergeConsecutive(cues);
     const md = renderMarkdown(cues, title);
     const mdName = sanitizeFilename(title) + ".md";
-    triggerDownload(md, mdName, "text/markdown;charset=utf-8");
     const speakerSet = new Set(cues.map((c) => c.speaker || unknownLabel));
     try {
       window.__teamsTranscriptMd = md;
@@ -479,6 +469,8 @@ export async function captureAndDownload(opts) {
       ok: true,
       mode: "api",
       filename: mdName,
+      content: md,
+      mime: "text/markdown;charset=utf-8",
       bytes: md.length,
       entries: cues.length,
       speakers: speakerSet.size,
@@ -657,7 +649,6 @@ export async function captureAndDownload(opts) {
     const title = pageTitle() || "Teams Transcript";
     const md = renderMarkdown(cues, title);
     const filename = sanitizeFilename(title) + ".md";
-    triggerDownload(md, filename, "text/markdown;charset=utf-8");
     try {
       window.__teamsTranscriptMd = md;
     } catch (_) {}
@@ -666,6 +657,8 @@ export async function captureAndDownload(opts) {
       ok: true,
       mode: "dom",
       filename,
+      content: md,
+      mime: "text/markdown;charset=utf-8",
       bytes: md.length,
       entries: cues.length,
       speakers: speakerSet.size,
