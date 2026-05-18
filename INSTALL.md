@@ -23,9 +23,12 @@ Same steps, just at `chrome://extensions/` (or `brave://extensions/`).
 
 ## Use
 
-1. Open a Teams meeting or recording.
+1. Open a Teams meeting or a Teams meeting **recording**. Recordings
+   typically open inside SharePoint or OneDrive's Stream player — those
+   work too. So does `teams.microsoft.com`, `web.microsoftstream.com`,
+   and the new `*.cloud.microsoft` surfaces.
 2. Reveal the **Transcript** pane (the side panel with the time-stamped
-   lines).
+   lines). Wait a beat for it to render.
 3. Click the extension's toolbar button.
 4. Click **Capture & Download .md**.
 

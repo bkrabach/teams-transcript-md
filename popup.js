@@ -9,9 +9,10 @@ function setStatus(text, kind = "") {
   statusEl.className = kind;
 }
 
-const TEAMS_HOST_RE =
-  /https?:\/\/([^/]+\.)?(teams\.microsoft\.com|teams\.live\.com|teams\.cloud\.microsoft|cloud\.microsoft)(\/|$)/i;
-
+// Teams meeting recordings live on a lot of different hosts (teams.microsoft.com,
+// *.sharepoint.com via Stream, web.microsoftstream.com, *.cloud.microsoft, ...)
+// and the URL is not a reliable gate. We let the user invoke the capture on any
+// page they want; the script's own pane-detection is the real check.
 btn.addEventListener("click", async () => {
   setStatus("");
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -20,41 +21,63 @@ btn.addEventListener("click", async () => {
     setStatus("No active tab.", "bad");
     return;
   }
-  if (!TEAMS_HOST_RE.test(tab.url || "")) {
-    setStatus(
-      "Open this on a Microsoft Teams meeting or recording page first.",
-      "bad",
-    );
-    return;
-  }
 
   const options = {
     includeTimestamps: $("opt-timestamps").checked,
     merge: $("opt-merge").checked,
     unknownLabel: ($("opt-unknown").value || "Unknown").trim() || "Unknown",
+    // Pass the *top-level* tab URL so the Markdown "Source:" line points at
+    // the page the user actually sees, even when the transcript lives in a
+    // cross-origin iframe (SharePoint-hosted Stream player, for example).
+    sourceUrl: tab.url || "",
   };
 
   btn.disabled = true;
   setStatus("Capturing transcript… this can take ~30s on long meetings.");
 
   try {
+    // Inject into every frame. Most frames (ads, analytics, page chrome) will
+    // bail out instantly via findPane(); only the frame that actually holds
+    // the transcript pane will scroll and capture.
     const injection = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
+      target: { tabId: tab.id, allFrames: true },
       world: "MAIN",
       func: captureAndDownload,
       args: [options],
     });
-    const result = injection?.[0]?.result;
-    if (!result) {
-      setStatus("Capture script returned no result.", "bad");
-    } else if (result.ok) {
-      const kb = (result.bytes / 1024).toFixed(1);
+
+    const results = (injection || [])
+      .map((r) => r && r.result)
+      .filter(Boolean);
+    const successes = results.filter((r) => r.ok);
+    const failures = results.filter((r) => !r.ok);
+
+    if (successes.length > 0) {
+      // Pick the result with the most entries — that's the real transcript
+      // frame. (Other frames that happen to satisfy the heuristic would
+      // typically have tiny entry counts.)
+      const best = successes.reduce((a, b) =>
+        (b.entries || 0) > (a.entries || 0) ? b : a,
+      );
+      const kb = (best.bytes / 1024).toFixed(1);
       setStatus(
-        `✓ Downloaded "${result.filename}" — ${result.entries} entries, ${result.speakers} speakers, ${kb} KB.`,
+        `✓ Downloaded "${best.filename}" — ${best.entries} entries, ${best.speakers} speakers, ${kb} KB.`,
         "good",
       );
+    } else if (failures.length > 0) {
+      // Prefer a specific error from the frame that got furthest.
+      const errs = failures.map((f) => f.error).filter(Boolean);
+      const err =
+        errs.find((e) => /captured 0/i.test(e)) ||
+        errs.find((e) => /locate the transcript/i.test(e)) ||
+        errs[0] ||
+        "No transcript pane found on this page.";
+      setStatus(`Failed: ${err}`, "bad");
     } else {
-      setStatus(`Failed: ${result.error || "unknown error"}`, "bad");
+      setStatus(
+        "No frames responded. Try reloading the page and clicking again.",
+        "bad",
+      );
     }
   } catch (err) {
     setStatus(`Injection error: ${err?.message || err}`, "bad");
@@ -71,14 +94,22 @@ async function captureAndDownload(opts) {
   const includeTimestamps = !!opts.includeTimestamps;
   const merge = opts.merge !== false;
   const unknownLabel = opts.unknownLabel || "Unknown";
+  const sourceUrl = opts.sourceUrl || location.href;
 
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const TIME_RE = /^\d{1,2}:\d{2}(?::\d{2})?$/;
   const TIME_RE_GLOBAL = /\d{1,2}:\d{2}(?::\d{2})?/g;
+  const TRANSCRIPT_HINT_RE = /Transcript|Speaker|said|\bAM\b|\bPM\b/g;
   const WS = /\s+/g;
 
   // -------------------------------------------------------------------------
   // 1. Find the transcript scroll pane.
+  //
+  // Heuristic mirrors the working console snippet but adds scoring so the
+  // best candidate wins on busy pages (SharePoint shells, Teams app frames,
+  // etc.). We deliberately keep the entry bar low so unfamiliar surfaces
+  // (Stream playback, web.microsoftstream.com, future Teams revs) still
+  // match if they contain timestamped transcript-like content.
   // -------------------------------------------------------------------------
   function findPane() {
     const all = document.querySelectorAll("*");
@@ -93,14 +124,15 @@ async function captureAndDownload(opts) {
       }
       const overflowY = style.overflowY;
       if (overflowY !== "auto" && overflowY !== "scroll") continue;
-      if (el.scrollHeight <= el.clientHeight + 100) continue;
+      if (el.scrollHeight <= el.clientHeight + 50) continue;
       const txt = el.innerText || "";
       if (!txt) continue;
       const timeHits = (txt.match(TIME_RE_GLOBAL) || []).length;
-      if (timeHits < 4) continue; // Real transcript panes have lots of timestamps.
+      const hintHits = (txt.match(TRANSCRIPT_HINT_RE) || []).length;
+      if (timeHits + hintHits < 2) continue;
       const label = el.getAttribute("aria-label") || "";
       const role = el.getAttribute("role") || "";
-      let score = timeHits;
+      let score = timeHits * 2 + hintHits;
       if (/transcript|caption|recap/i.test(label)) score += 200;
       if (/log|list|feed/i.test(role)) score += 20;
       // Prefer narrower panes — main video area also has scrollable content
@@ -119,7 +151,7 @@ async function captureAndDownload(opts) {
     return {
       ok: false,
       error:
-        "Couldn't locate the transcript pane. Open the Transcript tab on the meeting/recording first.",
+        "Couldn't locate the transcript pane on this page. Open the Transcript tab on the meeting or recording first, give it a moment to render, then try again.",
     };
   }
 
@@ -339,7 +371,7 @@ async function captureAndDownload(opts) {
   const out = [];
   out.push(`# Transcript: ${meetingTitle}`);
   out.push("");
-  out.push(`Source: ${location.href}`);
+  out.push(`Source: ${sourceUrl}`);
   out.push(`Duration: ${fmt(duration, true)}`);
   out.push(`Speakers: ${speakerOrder.join(", ")}`);
   out.push("");

@@ -7,8 +7,14 @@ downloads it as an LLM-friendly Markdown file — same shape as the
 
 ## What it does
 
-1. Locates the transcript scroll pane in the active Teams tab (works on
-   live meetings, scheduled meeting transcripts, and recording playback).
+1. Locates the transcript scroll pane in the active tab — works on live
+   meetings, scheduled meeting transcripts, and recording playback,
+   wherever Teams puts them today: `teams.microsoft.com`,
+   SharePoint-hosted Stream playback (`*.sharepoint.com`),
+   `web.microsoftstream.com`, and the new `*.cloud.microsoft` surfaces.
+   The capture script is injected into **every frame** on the page, so
+   transcripts that live inside a cross-origin player iframe (very
+   common on SharePoint recording pages) work too.
 2. Auto-scrolls top → bottom, harvesting every entry that Teams' virtualised
    list renders along the way.
 3. Parses each entry into `(speaker, timestamp, text)`.
