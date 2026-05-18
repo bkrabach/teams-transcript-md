@@ -1,0 +1,137 @@
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #1f1f1f;
+  --muted: #6b6b6b;
+  --accent: #4f46e5;
+  --accent-fg: #ffffff;
+  --border: #e2e2e2;
+  --good: #0a7f3f;
+  --bad: #b3261e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1f1f1f;
+    --fg: #f1f1f1;
+    --muted: #a1a1a1;
+    --accent: #818cf8;
+    --accent-fg: #1f1f1f;
+    --border: #3a3a3a;
+    --good: #4ade80;
+    --bad: #f87171;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  width: 340px;
+  padding: 14px 14px 12px;
+}
+
+header h1 {
+  font-size: 14px;
+  margin: 0 0 4px;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+button.primary {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  cursor: pointer;
+}
+
+button.primary:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+button.primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+#status {
+  font-size: 12px;
+  margin: 10px 0 6px;
+  min-height: 1.4em;
+  color: var(--muted);
+  word-break: break-word;
+}
+
+#status.good {
+  color: var(--good);
+}
+#status.bad {
+  color: var(--bad);
+}
+
+details {
+  margin-top: 6px;
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+details > summary {
+  cursor: pointer;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+details label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+details label code {
+  background: rgba(127, 127, 127, 0.15);
+  padding: 0 4px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+details label input[type="text"] {
+  flex: 1 0 100%;
+  margin-top: 2px;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+}
+
+footer {
+  margin-top: 10px;
+  font-size: 11px;
+}
+
+.muted {
+  color: var(--muted);
+  margin: 0;
+}

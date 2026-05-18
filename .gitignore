@@ -1,0 +1,16 @@
+# Build / packaging
+*.zip
+*.crx
+dist/
+build/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Node tooling (only if added later)
+node_modules/
+package-lock.json

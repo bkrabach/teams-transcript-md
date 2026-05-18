@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Teams Transcript → Markdown</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Teams Transcript → Markdown</h1>
+      <p class="hint">
+        Open the transcript pane in a Teams meeting or recording, then click
+        Capture.
+      </p>
+    </header>
+
+    <main>
+      <button id="capture" class="primary">Capture &amp; Download .md</button>
+      <div id="status" role="status" aria-live="polite"></div>
+
+      <details>
+        <summary>Options</summary>
+        <label>
+          <input id="opt-timestamps" type="checkbox" checked />
+          Include <code>[MM:SS]</code> timestamps
+        </label>
+        <label>
+          <input id="opt-merge" type="checkbox" checked />
+          Merge consecutive same-speaker entries
+        </label>
+        <label>
+          Label for unnamed speakers
+          <input id="opt-unknown" type="text" value="Unknown" maxlength="40" />
+        </label>
+      </details>
+    </main>
+
+    <footer>
+      <p class="muted">
+        Tip: this also works on the recording playback page (the transcript tab
+        on the right).
+      </p>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
