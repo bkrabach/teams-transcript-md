@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Bold MD letterform on a rounded purple tile -->
+  <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7376BD"/>
+      <stop offset="1" stop-color="#4F529A"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="116" height="116" rx="24" fill="url(#g3)"/>
+  <text x="64" y="88" text-anchor="middle"
+        font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif"
+        font-weight="900" font-size="68" fill="#FFFFFF"
+        letter-spacing="-2">MD</text>
+</svg>

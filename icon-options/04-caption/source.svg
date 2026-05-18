@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Rounded card with three speaker rows: avatar dot + caption bar -->
+  <rect x="6" y="6" width="116" height="116" rx="22" fill="#FFFFFF" stroke="#6264A7" stroke-width="6"/>
+  <!-- Row 1 -->
+  <circle cx="28" cy="42" r="8" fill="#6264A7"/>
+  <rect x="44" y="37" width="62" height="10" rx="5" fill="#6264A7"/>
+  <!-- Row 2 (lighter, different speaker) -->
+  <circle cx="28" cy="66" r="8" fill="#8B8DCE"/>
+  <rect x="44" y="61" width="48" height="10" rx="5" fill="#8B8DCE"/>
+  <!-- Row 3 (back to speaker 1) -->
+  <circle cx="28" cy="90" r="8" fill="#6264A7"/>
+  <rect x="44" y="85" width="56" height="10" rx="5" fill="#6264A7"/>
+</svg>

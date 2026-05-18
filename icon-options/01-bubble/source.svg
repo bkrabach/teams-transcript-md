@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Teams-style chat bubble with .md inside -->
+  <rect x="10" y="18" width="108" height="74" rx="18" ry="18" fill="#6264A7"/>
+  <path d="M 32 92 L 32 116 L 58 92 Z" fill="#6264A7"/>
+  <text x="64" y="73" text-anchor="middle"
+        font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif"
+        font-weight="900" font-size="44" fill="#FFFFFF"
+        letter-spacing="-1">md</text>
+</svg>

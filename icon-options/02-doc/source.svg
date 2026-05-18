@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Document with a coloured header bar and four caption lines -->
+  <rect x="18" y="10" width="92" height="108" rx="10" fill="#FFFFFF"/>
+  <path d="M 18 20 Q 18 10 28 10 H 100 Q 110 10 110 20 V 36 H 18 Z" fill="#6264A7"/>
+  <!-- Single small dot in header (speaker avatar hint) -->
+  <circle cx="32" cy="23" r="5" fill="#FFFFFF" opacity="0.85"/>
+  <rect x="44" y="20" width="34" height="6" rx="3" fill="#FFFFFF" opacity="0.85"/>
+  <!-- Caption lines -->
+  <rect x="30" y="52" width="68" height="7" rx="3.5" fill="#1F1F2E"/>
+  <rect x="30" y="68" width="56" height="7" rx="3.5" fill="#1F1F2E"/>
+  <rect x="30" y="84" width="64" height="7" rx="3.5" fill="#1F1F2E"/>
+  <rect x="30" y="100" width="44" height="7" rx="3.5" fill="#1F1F2E"/>
+</svg>

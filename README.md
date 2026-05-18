@@ -43,13 +43,36 @@ downloads it as an LLM-friendly Markdown file — same shape as the
 It also works in Google Chrome / Brave / any recent Chromium — same steps,
 just at `chrome://extensions/`.
 
-### Icons (optional)
+### Icons
 
-The manifest references `icons/icon-{16,32,48,128}.png`. They are not
-included in the repo; Edge will fall back to a generic puzzle-piece icon
-when they are missing, and the extension still works fine. Drop your own
-PNGs at those paths if you want a custom toolbar icon, or remove the
-`icons` block from `manifest.json`.
+The repo ships **four icon options** in `icon-options/`:
+
+| Option       | Look                                                  | Best at 16 px |
+| ------------ | ----------------------------------------------------- | ------------- |
+| `bubble`     | Teams-purple chat bubble with `md` inside             | Shape OK, text mushy |
+| `doc`        | Document with purple header and four caption lines    | Good          |
+| `monogram`   | Bold white `MD` on a rounded purple tile (**default**) | Excellent    |
+| `caption`    | Three speaker rows (avatar dot + caption bar)          | Good          |
+
+`icon-options/preview.png` is a single composite that shows all four side
+by side at 128 px (on light and dark backgrounds) and at toolbar sizes
+(16/32/48). Open it to compare.
+
+Swap the active set any time:
+
+```bash
+icon-options/pick.sh             # interactive list
+icon-options/pick.sh bubble      # or pick by name
+```
+
+Then reload the extension from `edge://extensions/`.
+
+To regenerate everything from the source SVGs (e.g. after tweaking colors
+or letterforms) install Python with `cairosvg` and Pillow, then run:
+
+```bash
+python3 icon-options/build_icons.py
+```
 
 ## Use it
 
