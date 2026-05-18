@@ -30,7 +30,28 @@ Same steps, just at `chrome://extensions/` (or `brave://extensions/`).
 2. Reveal the **Transcript** pane (the side panel with the time-stamped
    lines). Wait a beat for it to render.
 3. Click the extension's toolbar button.
-4. Click **Capture & Download .md**.
+4. Pick **Save as: Markdown** (default) or **Raw WebVTT**, then click
+   **Capture & Download**.
+
+### Two capture paths, picked automatically
+
+| You're on… | Path | Speed |
+| --- | --- | --- |
+| A SharePoint / OneDrive **recording** page (`stream.aspx`) | **API fast path** — pulls the real `.vtt` file straight from SharePoint | ~1–3 s |
+| Anywhere else (Teams live meeting, legacy Stream, etc.) | **DOM scrape** — scrolls the rendered transcript pane | ~20–40 s |
+
+The popup status message tells you which path it used (`✓ via API` vs
+`✓ via DOM`).
+
+### Save as: Raw WebVTT
+
+Lets you grab the original `.vtt` Microsoft has on the server, with
+millisecond-precise timestamps and the structured `<v Speaker>` voice
+tags Teams uses internally — useful if you want to post-process it with
+the [`transcripts`](https://github.com/) CLI or your own tooling.
+Only available on the fast path; on a live Teams meeting page the
+DOM-scrape fallback can't produce a faithful `.vtt`, so leave the
+default Markdown setting on.
 
 A long meeting takes ~30 s — the extension has to scroll the transcript
 top-to-bottom to render every entry. When it finishes, your browser saves

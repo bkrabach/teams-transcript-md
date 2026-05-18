@@ -15,11 +15,23 @@
     </header>
 
     <main>
-      <button id="capture" class="primary">Capture &amp; Download .md</button>
+      <button id="capture" class="primary">Capture &amp; Download</button>
       <div id="status" role="status" aria-live="polite"></div>
 
+      <fieldset class="format">
+        <legend>Save as</legend>
+        <label>
+          <input type="radio" name="fmt" value="md" checked />
+          Markdown <span class="muted">(.md, LLM-friendly)</span>
+        </label>
+        <label>
+          <input type="radio" name="fmt" value="vtt" />
+          Raw WebVTT <span class="muted">(.vtt, SharePoint recordings only)</span>
+        </label>
+      </fieldset>
+
       <details>
-        <summary>Options</summary>
+        <summary>Markdown options</summary>
         <label>
           <input id="opt-timestamps" type="checkbox" checked />
           Include <code>[MM:SS]</code> timestamps
@@ -37,8 +49,9 @@
 
     <footer>
       <p class="muted">
-        Tip: this also works on the recording playback page (the transcript tab
-        on the right).
+        Fast path (~1–3 s) on SharePoint / OneDrive recording pages
+        (<code>stream.aspx</code>) — falls back to a DOM scrape (~30 s) on
+        Teams live meetings and other surfaces.
       </p>
     </footer>
 

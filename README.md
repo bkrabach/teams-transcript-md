@@ -7,14 +7,34 @@ downloads it as an LLM-friendly Markdown file — same shape as the
 
 ## What it does
 
-1. Locates the transcript scroll pane in the active tab — works on live
-   meetings, scheduled meeting transcripts, and recording playback,
-   wherever Teams puts them today: `teams.microsoft.com`,
-   SharePoint-hosted Stream playback (`*.sharepoint.com`),
-   `web.microsoftstream.com`, and the new `*.cloud.microsoft` surfaces.
-   The capture script is injected into **every frame** on the page, so
-   transcripts that live inside a cross-origin player iframe (very
-   common on SharePoint recording pages) work too.
+Two capture paths, picked automatically per page:
+
+1. **API fast path (`~1–3 s`)** — on SharePoint- or OneDrive-hosted
+   recording pages (`*.sharepoint.com/.../stream.aspx*`), the script
+   harvests the SharePoint drive/item IDs from the page's bootstrap
+   `<script>` tags, calls
+   `/_api/v2.1/drives/{driveId}/items/{itemId}?...=media/transcripts`,
+   rewrites the returned `temporaryDownloadUrl` to the
+   `streamContent?is=1&applymediaedits=false` form, and downloads the
+   raw `.vtt` file Microsoft already has on the server.
+
+2. **DOM scrape (`~20–40 s`)** — fallback for anywhere the fast path
+   doesn't apply: `teams.microsoft.com` live meetings, legacy
+   `web.microsoftstream.com`, the new `*.cloud.microsoft` surfaces,
+   etc. Locates the transcript scroll pane via content heuristics
+   (scrollable overflow + density of timestamps and `Speaker`/`said`/
+   `AM`/`PM` hits), auto-scrolls top-to-bottom, and extracts entries
+   from the rendered DOM. The capture script is injected into every
+   frame on the page, so transcripts that live inside a cross-origin
+   player iframe work too.
+
+The popup picks between **Markdown** (LLM-friendly, default) and
+**Raw WebVTT** (fast-path only — the DOM can't produce a faithful
+`.vtt` because rendered times are second-precision). Both paths
+funnel through the same Markdown renderer when `.md` is selected, so
+the output shape is identical regardless of which path captured the
+data; it's also byte-identical to the
+[`transcripts vtt2md`](../transcripts) CLI's output on the same `.vtt`.
 2. Auto-scrolls top → bottom, harvesting every entry that Teams' virtualised
    list renders along the way.
 3. Parses each entry into `(speaker, timestamp, text)`.
