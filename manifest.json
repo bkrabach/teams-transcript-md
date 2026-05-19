@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Teams Transcript to Markdown",
-  "version": "0.5.1",
-  "description": "Capture the transcript from a Microsoft Teams meeting recording and download it as an LLM-friendly Markdown file (or raw WebVTT). Open or reveal the saved file from the popup.",
+  "version": "0.5.2",
+  "description": "Capture Microsoft Teams meeting recording transcripts as LLM-friendly Markdown or raw WebVTT. Fast, private, free.",
   "permissions": [
     "activeTab",
     "scripting",

@@ -7,8 +7,8 @@ guide assume the repo lives at `~/dev/vtt-clean/teams-transcript-md/`
 ## Files this guide references
 
 ```
-manifest.json                         the extension manifest (v0.5.1)
-dist/teams-transcript-md-v0.5.1.zip   the artifact uploaded to both stores
+manifest.json                         the extension manifest (v0.5.2)
+dist/teams-transcript-md-v0.5.2.zip   the artifact uploaded to both stores
 privacy.md                            paste-and-publish privacy policy
 store-assets/promo-1280x800.png       Edge promotional tile + Chrome large tile
 store-assets/promo-440x280.png        Chrome small promotional tile
@@ -74,7 +74,7 @@ cd ~/dev/vtt-clean/teams-transcript-md
 ./package.sh
 ```
 
-You should see `dist/teams-transcript-md-v0.5.1.zip` (~23–24 KB).
+You should see `dist/teams-transcript-md-v0.5.2.zip` (~23–24 KB).
 The SHA256 printed at the end is reproducible — if you rerun the
 script with no source changes you'll get the same hash. Useful when
 verifying you uploaded the right file.
@@ -95,7 +95,7 @@ verifying you uploaded the right file.
 ### 1.2 Submit a new extension
 
 1. Dashboard → **Microsoft Edge Add-ons** → **New extension**.
-2. **Packages tab:** upload `dist/teams-transcript-md-v0.5.1.zip`.
+2. **Packages tab:** upload `dist/teams-transcript-md-v0.5.2.zip`.
    Edge unpacks it, reads the manifest, shows the permissions it
    parsed. Verify it lists exactly:
    `activeTab, scripting, storage, downloads, downloads.open`.
@@ -174,7 +174,7 @@ submission of a new extension; usually <48 h for subsequent updates.
 ### 2.2 Create the listing
 
 Click **New item**, drag-drop **the same zip** you sent to Edge:
-`dist/teams-transcript-md-v0.5.1.zip`.
+`dist/teams-transcript-md-v0.5.2.zip`.
 
 ### 2.3 Store listing tab
 
