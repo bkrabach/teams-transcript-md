@@ -59,6 +59,10 @@ mkdir -p "$STAGE/icons"
 cp manifest.json capture.js popup.html popup.css popup.js INSTALL.md "$STAGE/"
 cp icons/icon-16.png icons/icon-32.png icons/icon-48.png icons/icon-128.png "$STAGE/icons/"
 
+# Note: store-assets/, privacy.md, PUBLISH.md, README.md, and icon-options/
+# are intentionally NOT included in the user zip — they are repo-only
+# materials used for publication / development, not runtime files.
+
 # Build the zip with a stable, sorted file order so the artifact is
 # reproducible byte-for-byte across runs.
 (

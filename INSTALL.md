@@ -1,7 +1,7 @@
 # Install — Teams Transcript to Markdown
 
 A small Microsoft Edge / Chrome extension that captures the transcript
-from a Microsoft Teams meeting or recording and downloads it as an
+from a Microsoft Teams meeting **recording** and downloads it as an
 LLM-friendly Markdown file (or raw WebVTT). ~30 s to install, no
 account or sign-in needed.
 
@@ -24,10 +24,10 @@ Same steps, just at `chrome://extensions/` (or `brave://extensions/`).
 
 ## Use
 
-1. Open a Teams meeting or a Teams meeting **recording**. Recordings
-   typically open inside SharePoint or OneDrive's Stream player — those
-   work too. So does `teams.microsoft.com`,
-   `web.microsoftstream.com`, and the new `*.cloud.microsoft` surfaces.
+1. Open a Teams meeting **recording**. Recordings typically open inside
+   SharePoint or OneDrive's Stream player — that's the fast path. The
+   `web.microsoftstream.com` and `*.cloud.microsoft` recording surfaces
+   also work (slower, via DOM scrape).
 2. Reveal the **Transcript** pane (the side panel with the time-stamped
    lines). Wait a beat for it to render.
 3. Click the extension's toolbar button — the popup opens.
@@ -56,7 +56,7 @@ label) are remembered across popup opens.
 | You're on… | Path | Speed |
 | --- | --- | --- |
 | SharePoint / OneDrive **recording** page (`stream.aspx`) | **API fast path** — pulls the real `.vtt` file straight from SharePoint | ~1–3 s |
-| Anywhere else (Teams live meeting, legacy Stream, …) | **DOM scrape** — scrolls the rendered transcript pane | ~20–40 s |
+| Other recording surfaces (legacy Stream, `*.cloud.microsoft`, …) | **DOM scrape** — scrolls the rendered transcript pane | ~20–40 s |
 
 The popup status line tells you which path it took
 (`✓ via API · 1.4s · 50.3 KB` vs
@@ -67,9 +67,10 @@ The popup status line tells you which path it took
 Gives you the original `.vtt` Microsoft has on the server, with
 millisecond-precise timestamps and the structured `<v Speaker>` voice
 tags Teams uses internally. Useful if you want to post-process it with
-a CLI or your own tooling. Only available on the API fast path; on a
-live Teams meeting page the DOM-scrape fallback can't reconstruct a
-faithful `.vtt`, so leave the default Markdown setting on there.
+a CLI or your own tooling. Only available on the API fast path
+(SharePoint Stream recording pages); other surfaces fall back to the
+DOM scrape, which can't reconstruct a faithful `.vtt`, so they're
+limited to Markdown.
 
 ## Permissions
 

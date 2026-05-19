@@ -478,6 +478,11 @@ export async function captureAndDownload(opts) {
   }
 
   // ----- Tier 2: DOM scrape --------------------------------------------------
+  // Fallback for surfaces where the API fast path doesn't apply (legacy
+  // Stream player, *.cloud.microsoft, anywhere stream.aspx isn't the URL).
+  // Scrolls the rendered transcript pane top-to-bottom and extracts entries
+  // from the DOM. Slower (~20-40 s) but works wherever the transcript
+  // renders as visible text.
   const TIME_RE = /^\d{1,2}:\d{2}(?::\d{2})?$/;
   const TIME_RE_GLOBAL = /\d{1,2}:\d{2}(?::\d{2})?/g;
   const TRANSCRIPT_HINT_RE = /Transcript|Speaker|said|\bAM\b|\bPM\b/g;
@@ -588,7 +593,7 @@ export async function captureAndDownload(opts) {
       return {
         ok: false,
         error:
-          "Raw .vtt requires a SharePoint Stream recording page (URL contains stream.aspx). On a live Teams meeting, switch the Save-as option to Markdown.",
+          "Raw .vtt requires a SharePoint Stream recording page (URL contains stream.aspx). For other recording surfaces, switch Save as to Markdown.",
       };
     }
     const pane = findPane();

@@ -1,7 +1,7 @@
 # Teams Transcript → Markdown (Edge / Chrome extension)
 
 A small Microsoft Edge extension (Manifest V3, Chromium-compatible) that
-captures the transcript from a Microsoft Teams meeting or recording and
+captures the transcript from a Microsoft Teams meeting **recording** and
 downloads it as an LLM-friendly Markdown file — same shape as the
 [`transcripts`](../transcripts) CLI's `vtt2md` output. Also speaks raw
 WebVTT for fast-path captures on SharePoint Stream pages.
@@ -27,13 +27,12 @@ Your last-used options persist across popup opens via
    rewrites the returned `temporaryDownloadUrl` to the
    `streamContent?is=1&applymediaedits=false` form, and downloads the
    raw `.vtt` file Microsoft already has on the server.
-2. **DOM scrape (`~20–40 s`)** — fallback for anywhere the fast path
-   doesn't apply: `teams.microsoft.com` live meetings, legacy
-   `web.microsoftstream.com`, the new `*.cloud.microsoft` surfaces.
-   Locates the transcript scroll pane via content heuristics, scrolls
-   top-to-bottom, extracts entries from the rendered DOM. The capture
-   script is injected into every frame, so cross-origin player iframes
-   work too.
+2. **DOM scrape (`~20–40 s`)** — fallback for recording surfaces where
+   the fast path doesn't apply: legacy `web.microsoftstream.com`, the
+   new `*.cloud.microsoft` surfaces, etc. Locates the transcript scroll
+   pane via content heuristics, scrolls top-to-bottom, extracts entries
+   from the rendered DOM. The capture script is injected into every
+   frame, so cross-origin player iframes work too.
 
 Both paths funnel through the same Markdown renderer when `.md` is
 selected, so the output shape is identical regardless of which path
