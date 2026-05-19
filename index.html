@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Teams Transcript to Markdown — browser extension</title>
+    <meta
+      name="description"
+      content="A browser extension that pulls the .vtt from a Microsoft Teams meeting recording and saves it as clean, LLM-friendly Markdown. No telemetry."
+    />
+    <link rel="icon" type="image/png" href="icons/icon-128.png" sizes="128x128" />
+    <link rel="apple-touch-icon" href="icons/icon-128.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <meta property="og:title" content="Teams Transcript to Markdown" />
+    <meta
+      property="og:description"
+      content="A browser extension that pulls the .vtt from a Teams meeting recording and saves it as clean Markdown."
+    />
+    <meta property="og:image" content="store-assets/promo-1280x800.png" />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="#top" aria-label="Teams Transcript to Markdown — top of page">
+          <img src="icons/icon-128.png" alt="" class="brand-icon" width="28" height="28" />
+          <span class="brand-name">Teams Transcript <span class="brand-arrow">→</span> Markdown</span>
+        </a>
+        <nav class="topnav">
+          <a href="#install">Install</a>
+          <a href="#how">How it works</a>
+          <a href="#privacy">Privacy</a>
+          <a
+            class="topnav-github"
+            href="https://github.com/bkrabach/teams-transcript-md"
+            aria-label="View source on GitHub"
+          >
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"
+              />
+            </svg>
+            <span class="visually-hidden">GitHub</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-text">
+            <img
+              src="icons/icon-128.png"
+              alt="App icon: a Teams-purple chat bubble with the letters md"
+              class="hero-icon"
+              width="96"
+              height="96"
+            />
+            <h1>
+              Teams transcripts<br />→ clean Markdown.
+            </h1>
+            <p class="tagline">
+              A browser extension that pulls the
+              <code>.vtt</code> from a Teams meeting recording and saves it
+              as token-efficient, LLM-ready Markdown.
+            </p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="#install">
+                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M8 1.5a.75.75 0 01.75.75v6.69l2.22-2.22a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 011.06-1.06l2.22 2.22V2.25A.75.75 0 018 1.5zm-6.25 11a.75.75 0 01.75-.75h11a.75.75 0 010 1.5h-11a.75.75 0 01-.75-.75z"
+                  />
+                </svg>
+                Install
+              </a>
+              <a
+                class="btn btn-secondary"
+                href="https://github.com/bkrabach/teams-transcript-md"
+                >View on GitHub</a
+              >
+            </div>
+          </div>
+
+          <!-- Stylized preview of the popup with a captured result -->
+          <div class="hero-preview" aria-hidden="true">
+            <div class="device">
+              <div class="device-chrome">
+                <span class="device-dot device-dot-red"></span>
+                <span class="device-dot device-dot-yellow"></span>
+                <span class="device-dot device-dot-green"></span>
+                <span class="device-url">bkrabach-corp.sharepoint.com/…/stream.aspx</span>
+              </div>
+              <div class="device-body">
+                <div class="device-popup">
+                  <div class="popup-header">
+                    <img src="icons/icon-128.png" alt="" width="22" height="22" />
+                    <strong>Teams Transcript → Markdown</strong>
+                  </div>
+                  <p class="popup-target">
+                    <span class="muted">Tab:</span>
+                    bkrabach-corp.sharepoint.com/…
+                  </p>
+                  <button class="popup-btn-primary" type="button" tabindex="-1">
+                    Capture &amp; Download
+                  </button>
+                  <div class="popup-result">
+                    <div class="popup-result-info">
+                      <span class="popup-result-filename">
+                        Amplifier team chat — 2026-05-14.md
+                      </span>
+                      <span class="popup-result-meta">
+                        via API · 1.4 s · 21.3 KB
+                      </span>
+                    </div>
+                    <div class="popup-result-actions">
+                      <button class="popup-btn-secondary" type="button" tabindex="-1">
+                        Open
+                      </button>
+                      <button class="popup-btn-secondary" type="button" tabindex="-1">
+                        Show in folder
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INSTALL -->
+      <section id="install" class="section section-install">
+        <div class="container">
+          <h2><span class="section-marker" aria-hidden="true"></span> Install</h2>
+          <p class="lede">
+            Three ways in. Store listings are pending review; the GitHub
+            release works today.
+          </p>
+          <div class="install-grid">
+            <article class="install-card install-card-muted">
+              <header>
+                <h3>Edge Add-ons</h3>
+                <span class="badge badge-muted">Pending review</span>
+              </header>
+              <p>Once approved, click "Get". A direct link will appear here.</p>
+              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
+            </article>
+            <article class="install-card install-card-muted">
+              <header>
+                <h3>Chrome Web Store</h3>
+                <span class="badge badge-muted">Pending review</span>
+              </header>
+              <p>Same extension, same code, separate queue.</p>
+              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
+            </article>
+            <article class="install-card install-card-primary">
+              <header>
+                <h3>Sideload</h3>
+                <span class="badge badge-good">Available now</span>
+              </header>
+              <p>Grab the <code>.zip</code> from the latest GitHub release.</p>
+              <a
+                class="btn btn-primary"
+                href="https://github.com/bkrabach/teams-transcript-md/releases/latest"
+                >Download .zip</a
+              >
+              <details class="install-howto">
+                <summary>How to load it (30 seconds)</summary>
+                <ol>
+                  <li>Unzip somewhere stable — the folder must stay where you put it.</li>
+                  <li>Open <code>edge://extensions/</code> or <code>chrome://extensions/</code>.</li>
+                  <li>Toggle <strong>Developer mode</strong> (bottom-left).</li>
+                  <li>Click <strong>Load unpacked</strong> and pick the unzipped folder.</li>
+                  <li>(Optional) pin it from the puzzle-piece menu in your toolbar.</li>
+                </ol>
+              </details>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section id="how" class="section section-how">
+        <div class="container">
+          <h2><span class="section-marker" aria-hidden="true"></span> How it works</h2>
+          <div class="feature-grid">
+            <article class="feature">
+              <div class="feature-step">1</div>
+              <h3>Click → capture → open</h3>
+              <p>
+                Click the toolbar icon, click Capture. The popup shows the saved
+                file with <em>Open</em> and <em>Show in folder</em> buttons. No
+                menus, no settings.
+              </p>
+            </article>
+            <article class="feature">
+              <div class="feature-step">2</div>
+              <h3>SharePoint fast path</h3>
+              <p>
+                The extension hits the SharePoint REST endpoint for the underlying
+                <code>.vtt</code> — about 2 seconds, byte-for-byte. A DOM-scrape
+                fallback exists for other recording surfaces, but you rarely hit it.
+              </p>
+            </article>
+            <article class="feature">
+              <div class="feature-step">3</div>
+              <h3>LLM-friendly Markdown</h3>
+              <p>
+                Consecutive turns from the same speaker get merged. Cue IDs and
+                millisecond timestamps are dropped. Output is
+                <code>[MM:SS] Speaker: text</code> — roughly 40&nbsp;% fewer tokens
+                than the raw <code>.vtt</code>.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SAMPLE OUTPUT -->
+      <section id="sample" class="section section-sample">
+        <div class="container">
+          <div class="sample-grid">
+            <div class="sample-main">
+              <h2><span class="section-marker" aria-hidden="true"></span> What you get</h2>
+              <p class="caption">
+                A 12-minute recording, captured and converted — 38 KB
+                <code>.vtt</code> becomes 21 KB of Markdown:
+              </p>
+              <figure class="codeblock">
+                <header class="codeblock-header">
+                  <span class="codeblock-dot codeblock-dot-red"></span>
+                  <span class="codeblock-dot codeblock-dot-yellow"></span>
+                  <span class="codeblock-dot codeblock-dot-green"></span>
+                  <span class="codeblock-title">Amplifier team chat — 2026-05-14.md</span>
+                </header>
+                <pre><code><span class="tok-h"># Transcript: Amplifier team chat — 2026-05-14</span>
+
+<span class="tok-k">Source:</span> https://&hellip;.sharepoint.com/&hellip;/stream.aspx
+<span class="tok-k">Duration:</span> 0:12:48
+<span class="tok-k">Speakers:</span> Brian Krabach, Priya Iyer, Devis Lucato
+
+---
+
+<span class="tok-t">[00:03]</span> <span class="tok-s">Brian Krabach:</span> Let's start with the demo.
+I'll share my screen.
+
+<span class="tok-t">[00:18]</span> <span class="tok-s">Priya Iyer:</span> Before that — did the
+build land on main?
+
+<span class="tok-t">[00:22]</span> <span class="tok-s">Brian Krabach:</span> It landed about an hour
+ago. CI is green.
+
+<span class="tok-t">[01:04]</span> <span class="tok-s">Priya Iyer:</span> Good. Walk us through the
+capture path first, then the conversion step.
+
+<span class="tok-t">[01:31]</span> <span class="tok-s">Devis Lucato:</span> And I want to see the
+fallback behavior on a non-Stream surface.</code></pre>
+              </figure>
+            </div>
+            <aside class="sample-explainer">
+              <h3>What's in the output</h3>
+              <ul>
+                <li>
+                  <strong>Header metadata</strong> — title, source URL, duration,
+                  ordered speakers.
+                </li>
+                <li>
+                  <strong>Cue blocks</strong> — one paragraph per turn,
+                  <code>[MM:SS] Speaker: text</code>.
+                </li>
+                <li>
+                  <strong>Speaker normalization</strong> — Teams'
+                  <code>&lt;v Speaker&gt;</code> voice tags lifted to a clean
+                  label.
+                </li>
+                <li>
+                  <strong>Merged turns</strong> — consecutive cues from one
+                  speaker collapse into a single paragraph.
+                </li>
+                <li>
+                  <strong>Optional raw <code>.vtt</code></strong> — switch the
+                  popup's <em>Save as</em> radio to get the original file.
+                </li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRIVACY -->
+      <section id="privacy" class="section section-privacy">
+        <div class="container">
+          <h2><span class="section-marker" aria-hidden="true"></span> Privacy</h2>
+          <div class="privacy-grid">
+            <ul class="privacy-noes" aria-label="What the extension doesn't do">
+              <li>No telemetry.</li>
+              <li>No servers.</li>
+              <li>No host permissions.</li>
+              <li>No background service worker.</li>
+            </ul>
+            <div class="privacy-prose">
+              <p>
+                The extension activates only when you click it, and it talks only
+                to the SharePoint origin you're already viewing — using your
+                existing browser session. Nothing leaves your machine that wasn't
+                already going to SharePoint.
+              </p>
+              <p>
+                <a class="link-arrow" href="privacy/">Read the full privacy policy →</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-grid">
+        <div class="footer-col">
+          <h4>Project</h4>
+          <ul>
+            <li><a href="https://github.com/bkrabach/teams-transcript-md">Repository</a></li>
+            <li>
+              <a href="https://github.com/bkrabach/teams-transcript-md/releases/latest"
+                >Latest release</a
+              >
+            </li>
+            <li>
+              <a href="https://github.com/bkrabach/teams-transcript-md/issues">Issues</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="privacy/">Privacy policy</a></li>
+            <li>
+              <a
+                href="https://github.com/bkrabach/teams-transcript-md/blob/main/LICENSE"
+                >License (MIT)</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col footer-attribution">
+          <h4>Attribution</h4>
+          <p>
+            Built by Brian Krabach · MIT-licensed open source ·
+            <em>Not affiliated with Microsoft.</em>
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>
+          <img src="icons/icon-128.png" alt="" width="18" height="18" />
+          Teams Transcript to Markdown
+        </span>
+        <span class="footer-bottom-spacer">·</span>
+        <span>Open source</span>
+      </div>
+    </footer>
+  </body>
+</html>

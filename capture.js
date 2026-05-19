@@ -143,7 +143,11 @@ export async function captureAndDownload(opts) {
     return t;
   }
 
-  // ----- VTT parser (port of transcripts/src/transcripts/vtt.py) -------------
+  // ----- VTT parser -----------------------------------------------------------
+  // Parses a WebVTT body into Cue objects, then renders LLM-friendly Markdown.
+  // Strips voice tags, decodes entities, merges consecutive same-speaker cues,
+  // and trims overlapping word-runs at cue boundaries that Teams exporters love
+  // to repeat. Mirrors what the popup's "Save as: Markdown" option produces.
   const VTT_TIMESTAMP_RE =
     /^\s*(?:(\d{1,2}):)?(\d{2}):(\d{2})\.(\d{3})\s*-->\s*(?:(\d{1,2}):)?(\d{2}):(\d{2})\.(\d{3})/;
   const VTT_VOICE_RE = /<v\s+([^>]+?)>([\s\S]*?)(?:<\/v>|$)/g;

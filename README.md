@@ -2,9 +2,12 @@
 
 A small Microsoft Edge extension (Manifest V3, Chromium-compatible) that
 captures the transcript from a Microsoft Teams meeting **recording** and
-downloads it as an LLM-friendly Markdown file — same shape as the
-[`transcripts`](../transcripts) CLI's `vtt2md` output. Also speaks raw
-WebVTT for fast-path captures on SharePoint Stream pages.
+downloads it as an LLM-friendly Markdown file. Also speaks raw WebVTT
+for fast-path captures on SharePoint Stream pages.
+
+🌐 **Project site:** <https://bkrabach.github.io/teams-transcript-md/>
+📥 **Latest release:** <https://github.com/bkrabach/teams-transcript-md/releases/latest>
+🔒 **Privacy policy:** <https://bkrabach.github.io/teams-transcript-md/privacy/>
 
 ## What it does
 
@@ -36,9 +39,7 @@ Your last-used options persist across popup opens via
 
 Both paths funnel through the same Markdown renderer when `.md` is
 selected, so the output shape is identical regardless of which path
-captured the data; it's also **byte-identical** to the
-[`transcripts vtt2md`](../transcripts) CLI's output on the same `.vtt`
-(verified on a 2.5 h, 2,529-cue recording).
+captured the data.
 
 ## File layout
 
