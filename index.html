@@ -216,8 +216,11 @@
               <p>
                 Consecutive turns from the same speaker get merged. Cue IDs and
                 millisecond timestamps are dropped. Output is
-                <code>[MM:SS] Speaker: text</code> — roughly 40&nbsp;% fewer tokens
-                than the raw <code>.vtt</code>.
+                <code>[MM:SS] Speaker: text</code> — roughly
+                <strong>75&nbsp;% fewer tokens</strong> than the raw
+                <code>.vtt</code> (measured with
+                <code>tiktoken</code>'s <code>cl100k_base</code> and
+                <code>o200k_base</code> on real Teams recordings).
               </p>
             </article>
           </div>
@@ -231,8 +234,10 @@
             <div class="sample-main">
               <h2><span class="section-marker" aria-hidden="true"></span> What you get</h2>
               <p class="caption">
-                A 12-minute recording, captured and converted — 38 KB
-                <code>.vtt</code> becomes 21 KB of Markdown:
+                A 2-hour meeting captured in ~1.4 s — 351 KB <code>.vtt</code>
+                becomes 137 KB of Markdown
+                (<strong>61&nbsp;% smaller in bytes, ~79&nbsp;% fewer tokens</strong>
+                to feed an LLM):
               </p>
               <figure class="codeblock">
                 <header class="codeblock-header">
