@@ -1,0 +1,1 @@
+Captures Microsoft Teams meeting recording transcripts and saves them as Markdown or WebVTT files for offline reading and LLM processing.

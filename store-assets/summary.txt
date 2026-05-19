@@ -1,0 +1,1 @@
+Capture Microsoft Teams meeting recording transcripts as LLM-friendly Markdown (~75% fewer tokens) or raw WebVTT.

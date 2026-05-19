@@ -1,0 +1,14 @@
+Homepage / project site:
+https://bkrabach.github.io/teams-transcript-md/
+
+Privacy policy:
+https://bkrabach.github.io/teams-transcript-md/privacy/
+
+Support (GitHub Issues):
+https://github.com/bkrabach/teams-transcript-md/issues
+
+Source repository:
+https://github.com/bkrabach/teams-transcript-md
+
+Latest release (zip download for sideload install):
+https://github.com/bkrabach/teams-transcript-md/releases/latest
