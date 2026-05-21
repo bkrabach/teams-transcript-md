@@ -13,3 +13,6 @@ build/
 # Node tooling (only if added later)
 node_modules/
 package-lock.json
+
+# macOS resource forks (Apple metadata files)
+._*
