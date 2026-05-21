@@ -72,14 +72,17 @@
               as token-efficient, LLM-ready Markdown.
             </p>
             <div class="cta-row">
-              <a class="btn btn-primary" href="#install">
+              <a
+                class="btn btn-primary"
+                href="https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci"
+              >
                 <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
                   <path
                     fill="currentColor"
                     d="M8 1.5a.75.75 0 01.75.75v6.69l2.22-2.22a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 011.06-1.06l2.22 2.22V2.25A.75.75 0 018 1.5zm-6.25 11a.75.75 0 01.75-.75h11a.75.75 0 010 1.5h-11a.75.75 0 01-.75-.75z"
                   />
                 </svg>
-                Install
+                Add to Chrome
               </a>
               <a
                 class="btn btn-secondary"
@@ -141,34 +144,37 @@
         <div class="container">
           <h2><span class="section-marker" aria-hidden="true"></span> Install</h2>
           <p class="lede">
-            Three ways in. Store listings are pending review; the GitHub
-            release works today.
+            One click in the Chrome Web Store, or sideload from a GitHub
+            release if you'd rather skip the store.
           </p>
-          <div class="install-grid">
-            <article class="install-card install-card-muted">
-              <header>
-                <h3>Edge Add-ons</h3>
-                <span class="badge badge-muted">Pending review</span>
-              </header>
-              <p>Once approved, click "Get". A direct link will appear here.</p>
-              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
-            </article>
-            <article class="install-card install-card-muted">
-              <header>
-                <h3>Chrome Web Store</h3>
-                <span class="badge badge-muted">Pending review</span>
-              </header>
-              <p>Same extension, same code, separate queue.</p>
-              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
-            </article>
+          <div class="install-grid install-grid-two">
             <article class="install-card install-card-primary">
               <header>
-                <h3>Sideload</h3>
-                <span class="badge badge-good">Available now</span>
+                <h3>Chrome Web Store</h3>
+                <span class="badge badge-good">Recommended</span>
               </header>
-              <p>Grab the <code>.zip</code> from the latest GitHub release.</p>
+              <p>
+                One click in Chrome. Also installs in any Chromium browser —
+                Edge users: enable <em>Allow extensions from other stores</em>
+                in Settings &nbsp;→&nbsp; Extensions first.
+              </p>
               <a
                 class="btn btn-primary"
+                href="https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci"
+                >Add to Chrome</a
+              >
+            </article>
+            <article class="install-card">
+              <header>
+                <h3>Sideload from GitHub</h3>
+                <span class="badge badge-muted">Alternative</span>
+              </header>
+              <p>
+                For developers, offline installs, or anyone who'd rather skip
+                the store. Same extension, same code.
+              </p>
+              <a
+                class="btn btn-secondary"
                 href="https://github.com/bkrabach/teams-transcript-md/releases/latest"
                 >Download .zip</a
               >
@@ -176,7 +182,7 @@
                 <summary>How to load it (30 seconds)</summary>
                 <ol>
                   <li>Unzip somewhere stable — the folder must stay where you put it.</li>
-                  <li>Open <code>edge://extensions/</code> or <code>chrome://extensions/</code>.</li>
+                  <li>Open <code>chrome://extensions/</code> (or <code>edge://extensions/</code>).</li>
                   <li>Toggle <strong>Developer mode</strong> (bottom-left).</li>
                   <li>Click <strong>Load unpacked</strong> and pick the unzipped folder.</li>
                   <li>(Optional) pin it from the puzzle-piece menu in your toolbar.</li>

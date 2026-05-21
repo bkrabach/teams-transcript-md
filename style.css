@@ -720,8 +720,15 @@ img {
   gap: 20px;
 }
 
+.install-grid-two {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 880px;
+  margin: 0 auto;
+}
+
 @media (max-width: 960px) {
-  .install-grid {
+  .install-grid,
+  .install-grid-two {
     grid-template-columns: 1fr;
   }
 }

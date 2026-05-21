@@ -5,6 +5,12 @@ Add-ons and Chrome Web Store submission forms. Each value lives in its
 own file in this directory for direct copy-paste; this README maps the
 form fields to those files.
 
+> **Status (2026-05-20):** Chrome Web Store **published** at
+> <https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci>.
+> Edge Add-ons not pursued — Edge users install the Chrome Web Store
+> listing after toggling *Allow extensions from other stores*. The
+> Edge-specific files below are kept for future use.
+
 ## Files in this directory
 
 ```

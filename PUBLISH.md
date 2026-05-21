@@ -4,6 +4,18 @@ Concrete, ordered checklist to ship this extension. Local paths in this
 guide assume the repo lives at `~/dev/vtt-clean/teams-transcript-md/`
 (adjust as needed).
 
+> **Current status (2026-05-20)**
+>
+> - ✅ **Chrome Web Store: published.**
+>   <https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci>
+> - ⏭ **Microsoft Edge Add-ons: not pursued.** Edge users install from
+>   the Chrome Web Store after toggling
+>   **Allow extensions from other stores** under `edge://extensions/`.
+>
+> The Phase 1 (Edge) instructions below are kept for reference. The
+> Phase 2 (Chrome) instructions below are the path that was actually
+> used; treat them as the playbook for future updates.
+
 ## Files this guide references
 
 ```

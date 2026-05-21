@@ -1,13 +1,19 @@
-# Teams Transcript → Markdown (Edge / Chrome extension)
+# Teams Transcript → Markdown (Chrome / Chromium extension)
 
-A small Microsoft Edge extension (Manifest V3, Chromium-compatible) that
+A small browser extension (Manifest V3, Chromium-compatible) that
 captures the transcript from a Microsoft Teams meeting **recording** and
 downloads it as an LLM-friendly Markdown file. Also speaks raw WebVTT
 for fast-path captures on SharePoint Stream pages.
 
+🛒 **Chrome Web Store:** <https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci>
 🌐 **Project site:** <https://bkrabach.github.io/teams-transcript-md/>
-📥 **Latest release:** <https://github.com/bkrabach/teams-transcript-md/releases/latest>
+📥 **Latest release (sideload):** <https://github.com/bkrabach/teams-transcript-md/releases/latest>
 🔒 **Privacy policy:** <https://bkrabach.github.io/teams-transcript-md/privacy/>
+
+> Works in Chrome out of the box. Also installs in Edge — toggle
+> **Allow extensions from other stores** under
+> `edge://extensions/` → Extensions first. Brave, Opera, and other
+> Chromium browsers can install directly from the Chrome Web Store.
 
 ## What it does
 

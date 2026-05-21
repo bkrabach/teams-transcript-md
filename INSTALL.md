@@ -1,26 +1,41 @@
 # Install — Teams Transcript to Markdown
 
-A small Microsoft Edge / Chrome extension that captures the transcript
-from a Microsoft Teams meeting **recording** and downloads it as an
-LLM-friendly Markdown file (or raw WebVTT). ~30 s to install, no
-account or sign-in needed.
+A small browser extension that captures the transcript from a Microsoft
+Teams meeting **recording** and downloads it as an LLM-friendly Markdown
+file (or raw WebVTT).
 
-## Microsoft Edge
+## The easiest way: Chrome Web Store
+
+If you have Chrome (or Brave / Opera / other Chromium browsers that
+install Chrome Web Store extensions directly), use this:
+
+**<https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci>**
+
+One click, auto-updates, no developer mode needed. Edge users can also
+install it from the Chrome Web Store after toggling
+**Allow extensions from other stores** under `edge://extensions/`.
+
+## Sideload (what's in this zip)
+
+Use this if you'd rather skip the store, you're on an enterprise
+browser that restricts store installs, or you want to test a specific
+version.
+
+### Chrome / Brave / Opera / other Chromium
 
 1. **Unzip** this archive somewhere stable on your machine
    (e.g. `~/Extensions/teams-transcript-md/`). The folder must stay where
-   it is — Edge loads the extension from this location every time.
-2. Open Edge and go to `edge://extensions/`.
-3. Toggle **Developer mode** on (bottom-left).
+   it is — the browser loads the extension from this location every time.
+2. Open `chrome://extensions/` (or `brave://extensions/`, etc.).
+3. Toggle **Developer mode** on (bottom-right or top-right).
 4. Click **Load unpacked** and select the folder you unzipped.
 5. (Optional) Click the puzzle-piece icon in the toolbar and **pin** the
    extension so its button stays visible.
 
-That's it. The extension is now installed.
+### Microsoft Edge
 
-## Google Chrome / Brave / other Chromium
-
-Same steps, just at `chrome://extensions/` (or `brave://extensions/`).
+Same steps, at `edge://extensions/`. Developer mode toggle is in the
+bottom-left of the page.
 
 ## Use
 
