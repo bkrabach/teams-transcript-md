@@ -1,21 +1,54 @@
-# Teams Transcript → Markdown (Chrome / Chromium extension)
+# Teams Transcript → Markdown
+
+<p align="center">
+  <img
+    src="store-assets/marquee-1400x560.png"
+    alt="Teams Transcript to Markdown — capture Microsoft Teams meeting recordings as LLM-friendly Markdown"
+    width="820"
+  />
+</p>
+
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci">
+    <img alt="Chrome Web Store"
+         src="https://img.shields.io/chrome-web-store/v/mkkfjnjhhfnhbfcmaljelamolajalaci?label=Chrome%20Web%20Store&color=6264a7" />
+  </a>
+  <a href="https://github.com/bkrabach/teams-transcript-md/releases/latest">
+    <img alt="Latest release"
+         src="https://img.shields.io/github/v/release/bkrabach/teams-transcript-md?label=release&color=6264a7" />
+  </a>
+  <img alt="Manifest V3"
+       src="https://img.shields.io/badge/manifest-v3-6264a7" />
+  <img alt="Privacy: no tracking"
+       src="https://img.shields.io/badge/privacy-no%20tracking-107c41" />
+</p>
 
 A small browser extension (Manifest V3, Chromium-compatible) that
 captures the transcript from a Microsoft Teams meeting **recording** and
 downloads it as an LLM-friendly Markdown file. Also speaks raw WebVTT
 for fast-path captures on SharePoint Stream pages.
 
-🛒 **Chrome Web Store:** <https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci>
-🌐 **Project site:** <https://bkrabach.github.io/teams-transcript-md/>
-📥 **Latest release (sideload):** <https://github.com/bkrabach/teams-transcript-md/releases/latest>
-🔒 **Privacy policy:** <https://bkrabach.github.io/teams-transcript-md/privacy/>
+|   |   |
+| - | - |
+| **Chrome Web Store** | <https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci> |
+| **Project site** | <https://bkrabach.github.io/teams-transcript-md/> |
+| **Latest release** (sideload `.zip`) | <https://github.com/bkrabach/teams-transcript-md/releases/latest> |
+| **Privacy policy** | <https://bkrabach.github.io/teams-transcript-md/privacy/> |
 
 > Works in Chrome out of the box. Also installs in Edge — toggle
 > **Allow extensions from other stores** under
 > `edge://extensions/` → Extensions first. Brave, Opera, and other
-> Chromium browsers can install directly from the Chrome Web Store.
+> Chromium browsers install from the Chrome Web Store directly.
 
 ## What it does
+
+<p align="center">
+  <img
+    src="store-assets/screenshot-popup.png"
+    alt="The extension popup over a Teams Stream recording page, showing a captured Markdown file with Open and Show in folder buttons"
+    width="720"
+  />
+</p>
 
 Click the toolbar icon on a Teams page → the popup opens → click
 **Capture & Download**. On success a result panel appears in the popup
@@ -47,89 +80,88 @@ Both paths funnel through the same Markdown renderer when `.md` is
 selected, so the output shape is identical regardless of which path
 captured the data.
 
-## File layout
-
-```
-manifest.json       MV3, three permissions, four icon sizes
-capture.js          Shared ES module: DEFAULT_OPTIONS, loadOptions,
-                    saveOptions, runCapture, and the page-injected
-                    captureAndDownload (API fast path + DOM scrape).
-popup.html          Interactive UI
-popup.css           Light + dark themed styles
-popup.js            Popup script — imports from capture.js; persists
-                    options to chrome.storage on every change.
-icons/icon-*.png    Toolbar icons at 16/32/48/128
-INSTALL.md          Peer-facing install guide (bundled into the zip)
-package.sh          Reproducible build script (produces dist/*.zip)
-```
-
 ## Install (developer workflow)
 
-1. Clone or download this folder.
-2. Open Edge to `edge://extensions/` (or `chrome://extensions/`).
-3. Toggle **Developer mode** (bottom-left).
-4. Click **Load unpacked** and select the folder.
-5. Pin the extension from the puzzle-piece menu.
+1. Clone this repo (or download the source).
+2. Open `chrome://extensions/` (or `edge://extensions/`, etc.).
+3. Toggle **Developer mode** (bottom-right or top-right).
+4. Click **Load unpacked** and select the repo folder.
+5. (Optional) Pin the extension from the puzzle-piece menu.
 
-For peers, ship them `dist/teams-transcript-md-v<version>.zip` (see
-**Package & share** below). It unpacks to the same layout and they load
-it unpacked the same way.
+For peers, point them at the [Chrome Web Store
+listing](https://chromewebstore.google.com/detail/teams-transcript-to-markd/mkkfjnjhhfnhbfcmaljelamolajalaci)
+or ship them `dist/teams-transcript-md-v<version>.zip` from the
+[latest release](https://github.com/bkrabach/teams-transcript-md/releases/latest);
+both unpack to the same layout.
 
 ## Permissions
 
-| Permission        | Why |
-| ----------------- | --- |
-| `activeTab`       | Temporary access to the current tab when the user clicks the toolbar icon. |
-| `scripting`       | Inject the capture script on demand via `chrome.scripting.executeScript`. |
-| `storage`         | Remember the user's last-saved format / option preferences. |
-| `downloads`       | Save the captured file via `chrome.downloads.download` (so the popup can show / reveal it). |
-| `downloads.open`  | Power the **Open** button in the result panel (`chrome.downloads.open`). |
+| Permission | Why |
+| --- | --- |
+| `activeTab` | Temporary access to the current tab when the user clicks the toolbar icon. |
+| `scripting` | Inject the capture script on demand via `chrome.scripting.executeScript`. |
+| `storage` | Remember the user's last-saved format / option preferences. |
+| `downloads` | Save the captured file via `chrome.downloads.download` (so the popup can show / reveal it). |
+| `downloads.open` | Power the **Open** button in the result panel (`chrome.downloads.open`). |
 
 No host permissions. No background service worker. No remote calls.
 Capture happens in the page; the popup hands the resulting blob to
 `chrome.downloads.download` and exposes the saved file through the
 result-panel buttons.
 
-## Icons
+## File layout
 
-Four icon options live in `icon-options/`; `bubble` is wired as the
-active set in `icons/`. `icon-options/preview.png` is a single composite
-showing all four at 128 px (light + dark bg) and at toolbar sizes
-(16/32/48). To swap:
+The runtime extension is six files:
 
-```bash
-icon-options/pick.sh             # interactive list
-icon-options/pick.sh bubble      # or pick by name
+```
+manifest.json       MV3 manifest — 5 permissions, no host permissions, no background worker
+capture.js          Shared ES module: API fast path + DOM scrape + the VTT→Markdown renderer
+popup.{html,css,js} Interactive popup UI; popup.js imports from capture.js
+icons/              Toolbar icons at 16/32/48/128
 ```
 
-Regenerate any option from its `source.svg` by installing Python with
-`cairosvg` and Pillow and running:
+Everything else in the repo is tooling: `icon-options/` (alternate icon
+sets + regenerator), `store-assets/` (promotional tiles, store screenshot
+and listing copy), `package.sh` / `PUBLISH.md` (release + store
+workflows), and the landing site (`index.html` + `style.css` + `privacy/`).
 
-```bash
-python3 icon-options/build_icons.py
-```
+## Build & package
 
-## Package & share
+### Build the release zip
 
 ```bash
 ./package.sh
 ```
 
 Produces `dist/teams-transcript-md-v<version>.zip` (~24 KB) containing
-exactly the files needed at runtime plus a peer-facing `INSTALL.md`:
+only the runtime files plus a peer-facing `INSTALL.md`. The build is
+reproducible (sorted file order, `-X` strips zip timestamps), so the
+same source tree produces the same SHA256 every time.
 
-```
-manifest.json
-capture.js
-popup.html  popup.css  popup.js
-icons/icon-{16,32,48,128}.png
-INSTALL.md
+### Swap or regenerate icons
+
+Four icon options live in `icon-options/`. `bubble` is the active set.
+`icon-options/preview.png` is a side-by-side composite at 16/32/48/128 on
+light and dark backgrounds.
+
+```bash
+icon-options/pick.sh             # interactive list
+icon-options/pick.sh bubble      # or pick by name
 ```
 
-The build is reproducible (sorted file order, `-X` strips zip
-timestamps), so the same source tree produces the same SHA256 every
-time.
+To regenerate any option from its `source.svg`:
+
+```bash
+pip install cairosvg pillow
+python3 icon-options/build_icons.py
+```
+
+### Publish a new store update
+
+The Chrome Web Store submission playbook (with field-by-field copy-paste
+text) lives in [`PUBLISH.md`](PUBLISH.md). Paste-ready listing strings
+live in [`store-assets/`](store-assets/).
 
 ## License
 
-MIT
+[MIT](LICENSE) · Not affiliated with Microsoft.
